@@ -290,6 +290,6 @@ Agent 每个任务应只用一个 toolset。如果你看到调研类调用出现
 - 撤销立即生效——下一个携带已撤销凭证的请求会被拒绝。
 - 传输仅走 TLS。
 
-##其他
+## 其他
 
 API docs: https://mcp.helium10.com/explorer/index.html
