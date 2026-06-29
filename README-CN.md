@@ -12,11 +12,11 @@ Helium 10 MCP 将 Helium 10 的核心调研与分析能力暴露为 agent 工具
 
 | Toolset | 用途 | 对应的 Helium 10 功能 |
 |---|---|---|
-| **关键词调研 (Keyword Research)** | 反查 ASIN、关键词扩展、列表的高频关键词、关键词库搜索 | Cerebro、Magnet、Black Box(Search Keywords) |
+| **关键词调研 (Keyword Research)** | 反查 ASIN、关键词扩展、列表的高频关键词、关键词库搜索 | Cerebro (Plus Magnet)、Black Box(Search Keywords) |
 | **产品调研 (Product Research)** | 按筛选条件查找产品 / 机会,支持在售与下架两种视图 | Black Box(Products) |
 | **品牌分析 (Brand Analytics)** | 亚马逊热门搜索词 / ABA | Black Box — ABA |
 | **关键词追踪 (Keyword Tracking)** | 排名历史、已追踪关键词列表、竞品关键词追踪、新关键词建议 | Keyword Tracker |
-| **Listing 分析 (Listings)** | Listing 详情、质量审计、并列对比、竞品基准 | Listing Analyzer、Listing Audit |
+| **Listing 分析 (Listings)** | Listing 详情、质量审计、并列对比、竞品基准 | Listing Analyzer |
 | **利润 (Profits / P&L)** | 账户级与产品级 P&L,支持汇总 / 拆解、时点 / 时间序列 | Profits |
 | **库存 (Inventory)** | 当前库存数量、FBA 库存健康度、销售速度 | Inventory |
 | **广告查询 (Ads Query)** | 对广告数据做自描述式分析查询,结果直接返回到对话中 | 广告 / Advertising 数据 |

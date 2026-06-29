@@ -12,11 +12,11 @@ Helium 10 MCP exposes the core research and analytics surface of Helium 10 as ag
 
 | Toolset | What it's for | Helium 10 equivalent |
 |---|---|---|
-| **Keyword Research** | Reverse-ASIN and keyword expansion, top keywords for a listing, keyword database search | Cerebro, Magnet, Black Box (Search Keywords) |
+| **Keyword Research** | Reverse-ASIN and keyword expansion, top keywords for a listing, keyword database search | Cerebro (Plus Magnet), Black Box (Search Keywords) |
 | **Product Research** | Find products / opportunities by filter, active and inactive views | Black Box (Products) |
 | **Brand Analytics** | Amazon top search terms / ABA | Black Box — ABA |
 | **Keyword Tracking** | Rank history, tracked keyword lists, competitor keyword tracking, new-keyword suggestions | Keyword Tracker |
-| **Listings** | Listing detail pull, quality audit, side-by-side comparison, competitor benchmark | Listing Analyzer, Listing Audit |
+| **Listings** | Listing detail pull, quality audit, side-by-side comparison, competitor benchmark | Listing Analyzer |
 | **Profits (P&L)** | Account- and product-level P&L, summary and breakdown, point-in-time and time series | Profits |
 | **Inventory** | Current inventory quantities, FBA inventory health, sales velocity | Inventory |
 | **Ads Query** | Self-describing analytical queries over your ad data, returned inline in chat | Ads / Advertising data |
