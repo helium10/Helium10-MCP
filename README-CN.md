@@ -54,11 +54,11 @@ https://mcp.helium10.com/mcp
 
 ## 认证
 
-> **暂不支持 API Token。** Helium 10 MCP 目前**仅**支持基于浏览器的 OAuth 2.0 认证。无法打开浏览器完成登录流程的场景(headless / CLI / 共享机器)当前暂不支持——基于 Token 的认证已在规划中。
+> **暂不支持 API Token。** Helium 10 MCP 目前**仅**支持基于浏览器的 OAuth 2.1 认证。无法打开浏览器完成登录流程的场景(headless / CLI / 共享机器)当前暂不支持——基于 Token 的认证已在规划中。
 
-Helium 10 MCP 复用 Helium 10 现有的 OAuth 2.0 体系。该流程会解析到一个真实的 Helium 10 用户,数据访问范围受限于该用户的账户权限。
+Helium 10 MCP 复用 Helium 10 现有的 OAuth 2.1 体系。该流程会解析到一个真实的 Helium 10 用户,数据访问范围受限于该用户的账户权限。
 
-### OAuth 2.0(浏览器登录)
+### OAuth 2.1(浏览器登录)
 
 适用于支持 **Authorization Code Flow + PKCE** 以及 **动态客户端注册(DCR)** 的客户端——Cursor、Claude Code、Claude Desktop、ChatGPT,以及大多数现代 MCP 客户端。
 
@@ -125,11 +125,17 @@ claude mcp add helium10-mcp --transport http https://mcp.helium10.com/mcp
 
 ### ChatGPT
 
-ChatGPT 仅支持 OAuth,这正好契合 Helium 10 MCP 的需求:
+ChatGPT 仅支持通过 OAuth 方式连接 MCP，这正好符合 Helium 10 MCP 的认证方式。
 
-1. 打开 **Settings → Connectors → Add custom connector**。
-2. **Server URL:** `https://mcp.helium10.com/mcp`。
-3. 在提示时通过浏览器流程登录。
+目前在 ChatGPT 中使用 Helium 10 MCP，需要先开启开发者模式，然后通过创建 App 的方式添加 MCP：
+
+1.打开 Settings。
+2.开启 Developer Mode。
+3.进入 Apps。
+4.点击 Create App。
+5.将 MCP Server URL 设置为：https://mcp.helium10.com/mcp
+6.按提示通过浏览器 OAuth 流程完成登录授权。
+7.扫描并启用可用的 MCP Tools
 
 ### 其他 MCP 客户端
 
