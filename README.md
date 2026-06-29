@@ -58,7 +58,7 @@ All toolsets are exposed under one server entry. You do **not** configure them i
 
 Helium 10 MCP uses Helium 10's existing OAuth 2.0 system. The flow resolves to a real Helium 10 user, and data access is scoped to that user's account entitlements.
 
-### OAuth 2.0 (browser login)
+### OAuth 2.1 (browser login)
 
 For clients that support OAuth 2.0 with **Authorization Code Flow + PKCE** and **Dynamic Client Registration (DCR)** — Cursor, Claude Code, Claude Desktop, ChatGPT, and most other modern MCP clients.
 
@@ -125,11 +125,14 @@ Use a **Custom Connector** (OAuth, no config files, no Node.js):
 
 ### ChatGPT
 
-ChatGPT uses OAuth only — which is exactly what Helium 10 MCP needs:
-
-1. Open **Settings → Connectors → Add custom connector**.
-2. **Server URL:** `https://mcp.helium10.com/mcp`.
-3. Sign in via the browser flow when prompted.
+ChatGPT uses OAuth only — which is exactly what Helium 10 MCP needs，To use it in ChatGPT, you need to enable Developer Mode and create an App:
+1. Open Settings.
+2. Enable Developer Mode.
+3. Go to Apps.
+4. Create a new App.
+5. Set the MCP Server URL to: https://mcp.helium10.com/mcp
+6. Sign in via the browser-based OAuth flow when prompted.
+7. Scan and enable the available MCP tools.
 
 ### Other MCP clients
 
