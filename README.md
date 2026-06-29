@@ -54,13 +54,13 @@ All toolsets are exposed under one server entry. You do **not** configure them i
 
 ## Authentication
 
-> **API Token is not supported yet.** Helium 10 MCP currently authenticates **only** via browser-based OAuth 2.0. Headless / CLI / shared-machine setups that cannot open a browser for the login flow aren't supported at this time — token-based auth is on the roadmap.
+> **API Token is not supported yet.** Helium 10 MCP currently authenticates **only** via browser-based OAuth 2.1. Headless / CLI / shared-machine setups that cannot open a browser for the login flow aren't supported at this time — token-based auth is on the roadmap.
 
-Helium 10 MCP uses Helium 10's existing OAuth 2.0 system. The flow resolves to a real Helium 10 user, and data access is scoped to that user's account entitlements.
+Helium 10 MCP uses Helium 10's existing OAuth 2.1 system. The flow resolves to a real Helium 10 user, and data access is scoped to that user's account entitlements.
 
 ### OAuth 2.1 (browser login)
 
-For clients that support OAuth 2.0 with **Authorization Code Flow + PKCE** and **Dynamic Client Registration (DCR)** — Cursor, Claude Code, Claude Desktop, ChatGPT, and most other modern MCP clients.
+For clients that support OAuth 2.1 with **Authorization Code Flow + PKCE** and **Dynamic Client Registration (DCR)** — Cursor, Claude Code, Claude Desktop, ChatGPT, and most other modern MCP clients.
 
 1. In your client's `mcp.json`, add the server URL **without any `headers` block**.
 2. On first connection the client opens your default browser; you log in to Helium 10 and click **Authorize**.
