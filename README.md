@@ -19,7 +19,7 @@ Helium 10 MCP exposes the core research and analytics surface of Helium 10 as ag
 | **Listings** | Listing detail pull, quality audit, side-by-side comparison, competitor benchmark | Listing Analyzer |
 | **Profits (P&L)** | Account- and product-level P&L, summary and breakdown, point-in-time and time series | Profits |
 | **Inventory** | Current inventory quantities, FBA inventory health, sales velocity | Inventory |
-| **Ads Query** | Self-describing analytical queries over your ad data, returned inline in chat | Ads / Advertising data |
+| **Ads Query** | Self-describing analytical queries over your ad data, returned inline in chat | Helium 10 Ads |
 
 All toolsets run on the **same Helium 10 account permission model** — your entitlements decide which tools and platforms appear in the agent's list. Tools you don't have access to simply won't show up.
 
@@ -38,7 +38,7 @@ One toolset per task. Pick a flow and stay in it.
 | "Audit this listing" / "compare these two listings" / "benchmark vs a competitor" | Listings |
 | "Show me my P&L / margin / profit trend" | Profits |
 | "How much stock do I have? / is my FBA inventory healthy? / how fast am I selling?" | Inventory |
-| "Show me ad spend / ACoS / ROAS numbers in chat" | Ads Query |
+| "Show me ad spend / ACoS / ROAS numbers for specific profiles and date range" | Ads Query |
 
 ---
 
@@ -229,7 +229,7 @@ A self-describing, schema-discovered query flow — the analytical analog of the
 | 1 | `get_ads_query_platforms` | List the ad platforms available to you. |
 | 2 | `get_ads_query_list` | Get the ad data hierarchy for a platform. |
 | 3 | `get_ads_query_schema` | Self-describing schema — dimensions, measures, filters, granularities. |
-| 4 | `get_ads_query_materials` | Resolve names (campaigns, etc.) into the IDs the query expects. |
+| 4 | `get_ads_query_materials` | Resolve names (profiles, campaigns, etc.) into the IDs the query expects. |
 | 5 | `execute_ads_query` | Run the query and return columns + rows inline (terminal step). |
 
 **Canonical flow:** `get_ads_query_platforms` → `get_ads_query_list` → `get_ads_query_schema` → `get_ads_query_materials` → `execute_ads_query`.
@@ -260,7 +260,7 @@ A self-describing, schema-discovered query flow — the analytical analog of the
 
 **Ads Query:**
 
-> Using Helium 10 Ads Query, show last 7 days of campaign spend, ACoS, and ROAS by day for my main account.
+> Using Helium 10 Ads Query, for my US Amazon profile, show daily spend, ACoS, and ROAS for the last 7 days.
 
 The agent discovers the schema at runtime, asks you to confirm parameters where it matters, and returns rows directly in the thread.
 
