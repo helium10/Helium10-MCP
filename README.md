@@ -60,7 +60,7 @@ Helium 10 MCP uses Helium 10's existing OAuth 2.1 system. The flow resolves to a
 
 ### OAuth 2.1 (browser login)
 
-For clients that support OAuth 2.1 with **Authorization Code Flow + PKCE** and **Dynamic Client Registration (DCR)** — Cursor, Claude Code, Claude Desktop, ChatGPT, and most other modern MCP clients.
+For clients that support OAuth 2.1 with **Authorization Code Flow + PKCE** and **Dynamic Client Registration (DCR)** — Cursor, Claude Code, Claude Desktop, ChatGPT, Codex, and most other modern MCP clients.
 
 1. In your client's `mcp.json`, add the server URL **without any `headers` block**.
 2. On first connection the client opens your default browser; you log in to Helium 10 and click **Authorize**.
@@ -112,9 +112,9 @@ Or in `.claude/settings.json`:
 
 Use a **Custom Connector** (OAuth, no config files, no Node.js):
 
-1. Open **Settings → Connectors → Add custom connector**.
-   - Claude Desktop: click your name in the lower-left → **Settings → Connectors**.
-   - Claude on the web: profile menu → **Settings → Connectors**.
+1. Open the **Connectors** settings and click **Add custom connector**.
+   - Claude Desktop: click your name in the lower-left → **Settings → Connectors → Add custom connector**. (Or from a chat, click **Customize → Connectors → Add custom connector**.)
+   - Claude on the web: profile menu → **Settings → Connectors → Add custom connector**.
 2. Fill in:
    - **Name:** `Helium 10 MCP` (or whatever you like)
    - **Remote MCP server URL:** `https://mcp.helium10.com/mcp`
@@ -133,6 +133,40 @@ ChatGPT uses OAuth only — which is exactly what Helium 10 MCP needs，To use i
 5. Set the MCP Server URL to: https://mcp.helium10.com/mcp
 6. Sign in via the browser-based OAuth flow when prompted.
 7. Scan and enable the available MCP tools.
+
+### Codex
+
+Codex CLI supports remote streamable-HTTP MCP servers with OAuth login.
+
+Add the server via the CLI:
+
+```bash
+codex mcp add helium10-mcp --url https://mcp.helium10.com/mcp
+```
+
+Or add it manually to `~/.codex/config.toml` (project-scoped `.codex/config.toml` also works):
+
+```toml
+[mcp_servers.helium10-mcp]
+url = "https://mcp.helium10.com/mcp"
+```
+
+Then complete the browser-based OAuth login:
+
+```bash
+codex mcp login helium10-mcp
+```
+
+A browser tab opens for Helium 10 OAuth — sign in and click **Authorize**. The tools become available on your next Codex session. (Use `codex mcp logout helium10-mcp` to revoke.)
+
+**Codex desktop app (GUI):** you can add the server without touching config files.
+
+1. Open the profile menu (your account, lower-left) → **Settings**.
+2. Under **Integrations**, select **MCP Servers**, then click **+ Add Server**.
+3. In the **URL** field, enter `https://mcp.helium10.com/mcp`. Leave **Bearer token** and **Headers** empty — Helium 10 MCP uses OAuth, not a token.
+4. Click **Save**. Complete the browser OAuth login when prompted, then make sure the server's toggle is on. The tools appear in the server list once connected.
+
+> The Codex desktop app and CLI share the same `~/.codex/config.toml`, so a server added in either place shows up in the other.
 
 ### Other MCP clients
 
