@@ -326,3 +326,43 @@ Agents should pick one toolset per task. If you see a research call show up in t
 - Issuance, use, and revocation are written to an audit log.
 - Revocation is immediate — the next request with a revoked credential is rejected.
 - Transport is TLS-only.
+
+---
+
+## Agent Skills (plugin)
+
+This repository also ships the **`helium10` plugin** — agent skills that teach your agent *how to chain* the MCP tools above. Current skills:
+
+| Skill | What it does |
+|---|---|
+| `helium10-listing-builder` | Guides the agent through the Listing Builder tools to write, optimize, rewrite, and publish Amazon listings — with mandatory user checkpoints, keyword-allocation rules, and data-loss safeguards for the destructive sync step. |
+
+> **Prerequisite:** the skills orchestrate the Helium 10 MCP tools, so connect the MCP server (see [Client setup](#client-setup)) first — without it the skills have nothing to call.
+
+### Install
+
+**Claude Code:**
+
+```
+/plugin marketplace add helium10/Helium10-MCP
+/plugin install helium10@helium10
+```
+
+**Claude Desktop:** Customize → Browse Plugins → Personal → **+** → Add marketplace → `helium10/Helium10-MCP` → Sync, then install `helium10`.
+
+**Codex:**
+
+```bash
+codex plugin marketplace add helium10/Helium10-MCP
+codex plugin add helium10@helium10
+```
+
+**Cursor:** paste `https://github.com/helium10/Helium10-MCP` into Cursor Settings → Plugins.
+
+**Other Agent Skills-compatible tools (Windsurf etc.):** copy `skills/helium10-listing-builder/` into your project's `.agents/skills/` or `~/.agents/skills/`.
+
+The skills auto-activate on matching intent (e.g. "optimize my listing", "write a listing for this ASIN") and pause at built-in checkpoints that collect facts only you have — image choice, keyword sources, allocation approval, and explicit publish authorization.
+
+### License
+
+The contents of this repository are provided under the Helium 10 Proprietary License (see [LICENSE](LICENSE)): install and use as distributed; modification, derivative works, and redistribution are prohibited.

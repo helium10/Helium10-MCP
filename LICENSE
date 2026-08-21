@@ -1,0 +1,27 @@
+Helium 10 Proprietary License
+
+Copyright (c) 2026 Helium 10. All rights reserved.
+
+Permission is hereby granted to install and use the agent skills and plugin
+manifests contained in this repository, as distributed and without
+modification, together with AI agent clients (such as Claude Code, Claude
+Desktop, Codex, Cursor, and other compatible tools).
+
+The following are prohibited without prior written permission from Helium 10:
+
+1. Modifying the contents of this repository or creating derivative works
+   from them, including in any fork or copy;
+2. Redistributing, sublicensing, selling, or otherwise making the contents
+   available to third parties, in original or modified form, other than by
+   linking to this repository;
+3. Removing or altering copyright, attribution, or license notices.
+
+Forking on GitHub is permitted only to the extent required by GitHub's Terms
+of Service; any modification of a fork, or any use or distribution of a
+forked copy beyond viewing, is prohibited under this license.
+
+THE CONTENTS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+HELIUM 10 BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM
+THE USE OF OR INABILITY TO USE THE CONTENTS.
