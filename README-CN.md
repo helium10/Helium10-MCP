@@ -330,3 +330,43 @@ Agent 每个任务应只用一个 toolset。如果你看到调研类调用出现
 - 撤销立即生效——下一个携带已撤销凭证的请求会被拒绝。
 - 传输仅走 TLS。
 
+---
+
+## Agent Skills(插件)
+
+本仓库同时发布 **`helium10` 插件**——一组 agent skill,教你的 agent *如何编排*上面的 MCP 工具。当前包含:
+
+| Skill | 作用 |
+|---|---|
+| `helium10-listing-builder` | 引导 agent 走完 Listing Builder 工具链,撰写、优化、改写并发布亚马逊 listing——内置强制用户确认点、关键词分配规则,以及针对破坏性同步步骤的数据丢失防护。 |
+
+> **前置条件:** skill 编排的是 Helium 10 MCP 工具,请先按上文[客户端配置](#客户端配置)连接 MCP server——没有它,skill 无事可做。
+
+### 安装
+
+**Claude Code:**
+
+```
+/plugin marketplace add helium10/Helium10-MCP
+/plugin install helium10@helium10
+```
+
+**Claude Desktop:** Customize → Browse Plugins → Personal → **+** → Add marketplace → 填 `helium10/Helium10-MCP` → Sync,然后安装 `helium10`。
+
+**Codex:**
+
+```bash
+codex plugin marketplace add helium10/Helium10-MCP
+codex plugin add helium10@helium10
+```
+
+**Cursor:** 在 Cursor Settings → Plugins 中粘贴 `https://github.com/helium10/Helium10-MCP`。
+
+**其他兼容 Agent Skills 标准的工具(Windsurf 等):** 将 `skills/helium10-listing-builder/` 拷贝到项目的 `.agents/skills/` 或用户级 `~/.agents/skills/`。
+
+skill 会在意图匹配时自动激活(如"优化我的 listing"、"给这个 ASIN 写个 listing"),并在内置确认点暂停,收集只有你才知道的信息——选图、关键词来源、分配方案确认,以及明确的发布授权。
+
+### License
+
+本仓库内容以 Helium 10 专有许可发布(见 [LICENSE](LICENSE)):允许按原样安装使用;禁止修改、衍生与再分发。
+

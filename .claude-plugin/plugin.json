@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "helium10",
+  "version": "0.1.0",
+  "description": "Helium 10 agent skills that orchestrate the Helium 10 MCP tools — currently the Listing Builder workflow for writing, optimizing, rewriting, and publishing Amazon listings with mandatory user checkpoints.",
+  "author": {
+    "name": "Helium 10",
+    "url": "https://www.helium10.com"
+  },
+  "homepage": "https://github.com/helium10/Helium10-MCP",
+  "repository": "https://github.com/helium10/Helium10-MCP",
+  "license": "Proprietary",
+  "keywords": ["helium10", "amazon", "mcp", "listing", "listing-builder", "e-commerce"]
+}

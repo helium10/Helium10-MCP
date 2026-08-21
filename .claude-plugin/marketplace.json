@@ -1,0 +1,23 @@
+{
+  "name": "helium10",
+  "owner": {
+    "name": "Helium 10"
+  },
+  "metadata": {
+    "description": "Agent skills for Helium 10 — orchestration layers over the Helium 10 MCP server.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "helium10",
+      "source": "./",
+      "description": "Helium 10 agent skills that orchestrate the Helium 10 MCP tools — currently the Listing Builder workflow for writing, optimizing, rewriting, and publishing Amazon listings with mandatory user checkpoints.",
+      "author": {
+        "name": "Helium 10"
+      },
+      "license": "Proprietary",
+      "category": "e-commerce",
+      "tags": ["helium10", "amazon", "mcp", "listing", "listing-builder", "e-commerce"]
+    }
+  ]
+}
