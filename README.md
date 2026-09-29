@@ -94,7 +94,7 @@ To revoke a session, remove the connector / server entry in your client, and rev
 
 ## Client setup
 
-Because API Token auth isn't available yet, **every client below uses the no-headers OAuth pattern.** Point the client at the URL and let the browser flow handle the rest.
+Every client below supports both auth methods. **OAuth:** point the client at the URL with no headers and let the browser flow handle the rest. **API Token:** add an `Authorization` header containing `h10_mcp_<your-api-token>` and skip the browser login.
 
 ### Cursor
 
@@ -134,7 +134,7 @@ claude mcp add helium10-mcp \
   --header "Authorization: h10_mcp_<your-api-token>" \
   https://mcp.helium10.com/mcp
 ```
-Or in `.claude/settings.json`:
+Or in `.claude.json`:
 
 ```json
 {
@@ -249,18 +249,30 @@ codex mcp login helium10-mcp
 
 A browser tab opens for Helium 10 OAuth — sign in and click **Authorize**. The tools become available on your next Codex session. (Use `codex mcp logout helium10-mcp` to revoke.)
 
+API Token:
+
+If you'd rather skip the browser login (headless usage, CI, shared machines), add the token as an `Authorization` header in `~/.codex/config.toml` (project-scoped `.codex/config.toml` also works). No `codex mcp login` step is needed:
+
+```toml
+[mcp_servers.helium10-mcp]
+url = "https://mcp.helium10.com/mcp"
+http_headers = { "Authorization" = "h10_mcp_<your-api-token>" }
+```
+
 **Codex desktop app (GUI):** you can add the server without touching config files.
 
 1. Open the profile menu (your account, lower-left) → **Settings**.
 2. Under **Integrations**, select **MCP Servers**, then click **+ Add Server**.
-3. In the **URL** field, enter `https://mcp.helium10.com/mcp`. Leave **Bearer token** and **Headers** empty — Helium 10 MCP uses OAuth, not a token.
-4. Click **Save**. Complete the browser OAuth login when prompted, then make sure the server's toggle is on. The tools appear in the server list once connected.
+3. In the **URL** field, enter `https://mcp.helium10.com/mcp`.
+   - OAuth: leave **Bearer token** and **Headers** empty.
+   - API Token: leave **Bearer token** empty and add a header with name `Authorization` and value `h10_mcp_<your-api-token>`.
+4. Click **Save**. With OAuth, complete the browser login when prompted (API Token needs no login), then make sure the server's toggle is on. The tools appear in the server list once connected.
 
 > The Codex desktop app and CLI share the same `~/.codex/config.toml`, so a server added in either place shows up in the other.
 
 ### Other MCP clients
 
-Helium 10 MCP is a standard streamable-HTTP MCP server, so any compliant client (VS Code GitHub Copilot, Windsurf, Cline, custom in-house agents, …) can connect with the same OAuth pattern: point the client at `https://mcp.helium10.com/mcp` with **no headers**, and complete the browser login when prompted.
+Helium 10 MCP is a standard streamable-HTTP MCP server, so any compliant client (VS Code GitHub Copilot, Windsurf, Cline, custom in-house agents, …) can connect with either auth method:
 
 - OAuth — point the client at https://mcp.helium10.com/mcp with no headers.
 - API Token — point the client at the same URL and add an Authorization header containing h10_mcp_<your-api-token>.
@@ -405,7 +417,7 @@ Almost always a connection or auth issue: fully restart your MCP client and conf
 Expected after a period of inactivity — OAuth refresh tokens expire. Reconnect through the browser flow and you're good again.
 
 **I need headless / CI / API-key auth.**
-Not supported yet. Helium 10 MCP is OAuth-only for now; token-based auth is planned. For the moment, use a client that can complete the browser OAuth flow.
+Use an API Token. Create one under **Settings → MCP → Create API Key** (see [Option A](#option-a--api-token-recommended-for-headless-and-cli-clients)) and pass it as an `Authorization` header — no browser login required.
 
 **My agent mixed toolsets in one task.**
 Agents should pick one toolset per task. If you see a research call show up in the middle of an Ads Query flow (or vice versa), restate the intent in a fresh turn.
