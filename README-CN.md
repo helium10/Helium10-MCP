@@ -95,7 +95,7 @@ API Token 仅以加密哈希形式存储。Helium 10 无法再次显示或恢复
 
 ## 客户端配置
 
-由于 API Token 认证暂不可用,**下面所有客户端都使用无 headers 的 OAuth 模式。** 把客户端指向 URL,其余交给浏览器流程处理。
+下面所有客户端都同时支持两种认证方式。**OAuth:** 把客户端指向 URL,不带 headers,其余交给浏览器流程处理。**API Token:** 添加值为 `h10_mcp_<your-api-token>` 的 `Authorization` 请求头,无需浏览器登录。
 
 ### Cursor
 
@@ -135,14 +135,17 @@ claude mcp add helium10-mcp \
   --header "Authorization: h10_mcp_<your-api-token>" \
   https://mcp.helium10.com/mcp
 ```
-或在 `.claude/settings.json` 中:
+或在 `.claude.json` 中:
 
 ```json
 {
   "mcpServers": {
     "helium10-mcp": {
       "type": "http",
-      "url": "https://mcp.helium10.com/mcp"
+      "url": "https://mcp.helium10.com/mcp",
+      "headers" : {
+        "Authorization": "h10_mcp_<your-api-token>"
+      }
     }
   }
 }
@@ -267,21 +270,34 @@ codex mcp login helium10-mcp
 
 会弹出浏览器标签进行 Helium 10 OAuth——登录并点击 **Authorize(授权)**。工具会在下一次 Codex 会话中可用。(用 `codex mcp logout helium10-mcp` 撤销。)
 
+API Token:
+
+如果不想走浏览器登录(无头环境、CI、共用机器等),可以在 `~/.codex/config.toml`(项目级 `.codex/config.toml` 同样可用)中把 Token 作为 `Authorization` 请求头写入,无需执行 `codex mcp login`:
+
+```toml
+[mcp_servers.helium10-mcp]
+url = "https://mcp.helium10.com/mcp"
+http_headers = { "Authorization" = "h10_mcp_<your-api-token>" }
+```
+
 **Codex 桌面端应用(图形界面):** 无需改动配置文件即可添加。
 
 1. 点击左下角的账户头像菜单 → **设置**。
 2. 在 **集成** 分组下选择 **MCP 服务器**,点击右上角 **+ 添加服务器**。
-3. 在 **URL** 中填入 `https://mcp.helium10.com/mcp`。**Bearer 令牌环境变量** 与 **标头** 留空——Helium 10 MCP 走 OAuth,不需要 Token。
-4. 点击 **保存**,按提示完成浏览器 OAuth 登录,并确认该 server 的开关处于开启状态。连接成功后工具会出现在服务器列表中。
+3. 在 **URL** 中填入 `https://mcp.helium10.com/mcp`。
+   - OAuth:**Bearer 令牌环境变量** 与 **标头** 留空。
+   - API Token:**Bearer 令牌环境变量** 留空,在 **标头** 中添加一条名称为 `Authorization`、值为 `h10_mcp_<your-api-token>` 的请求头。
+4. 点击 **保存**。OAuth 方式按提示完成浏览器登录(API Token 方式无需登录),然后确认该 server 的开关处于开启状态。连接成功后工具会出现在服务器列表中。
 
 > Codex 桌面端应用与 CLI 共用同一份 `~/.codex/config.toml`,因此在任意一端添加的 server 都会在另一端出现。
 
 ### 其他 MCP 客户端
 
-Helium 10 MCP 是标准的 streamable-HTTP MCP server,因此任何兼容的客户端(VS Code GitHub Copilot、Windsurf、Cline、自研 agent……)都能用相同的 OAuth 模式连接:把客户端指向 `https://mcp.helium10.com/mcp`,**不带 headers**,并在提示时完成浏览器登录。
+Helium 10 MCP 是标准的 streamable-HTTP MCP server,因此任何兼容的客户端(VS Code GitHub Copilot、Windsurf、Cline、自研 agent……)都能用以下任一认证方式连接:
 
-OAuth — 将客户端连接到 https://mcp.helium10.com/mcp，无需配置任何请求头。
-API Token — 将客户端连接到同一 URL，并添加 Authorization 请求头，其值为 h10_mcp_<your-api-token>
+- OAuth — 将客户端连接到 https://mcp.helium10.com/mcp,无需配置任何请求头。
+- API Token — 将客户端连接到同一 URL,并添加 Authorization 请求头,其值为 h10_mcp_<your-api-token>。
+
 ---
 
 ## 验证
@@ -422,7 +438,7 @@ Agent 会在运行时发现 schema,在关键参数处请你确认,并将结果�
 长时间不活动后属正常现象——OAuth refresh token 会过期。重新走一遍浏览器流程即可恢复。
 
 **我需要 headless / CI / API Key 认证。**
-暂不支持。Helium 10 MCP 目前仅支持 OAuth;基于 Token 的认证已在规划中。当前请使用能完成浏览器 OAuth 流程的客户端。
+使用 API Token。在 **Settings → MCP → Create API Key** 创建一个(见上文方式 A),并作为 `Authorization` 请求头传入即可,无需浏览器登录。
 
 **Agent 在一个任务里混用了多个 toolset。**
 Agent 每个任务应只用一个 toolset。如果你看到调研类调用出现在 Ads Query 流程中间(或反过来),请在新的一轮对话里重新说明意图。
