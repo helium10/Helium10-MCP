@@ -54,12 +54,34 @@ https://mcp.helium10.com/mcp
 
 ## 认证
 
-> **暂不支持 API Token。** Helium 10 MCP 目前**仅**支持基于浏览器的 OAuth 2.1 认证。无法打开浏览器完成登录流程的场景(headless / CLI / 共享机器)当前暂不支持——基于 Token 的认证已在规划中。
+Helium 10 MCP 复用 Helium 10 现有的身份认证和授权体系。下面两种认证方式最终都会关联到一个真实的 Helium 10 用户，数据访问范围受该用户的账户权限、订阅权益及已连接站点限制。
 
-Helium 10 MCP 复用 Helium 10 现有的 OAuth 2.1 体系。该流程会解析到一个真实的 Helium 10 用户,数据访问范围受限于该用户的账户权限。
+你需要拥有一个 Helium 10 账户，并满足以下任一条件：
 
-### OAuth 2.1(浏览器登录)
+- 拥有一个 **API Token**，适用于无法完成浏览器 OAuth 登录的客户端；或者
+- 使用支持 OAuth 2.1、Authorization Code Flow 和 PKCE 的 MCP 客户端——大多数现代 MCP 客户端均已支持。
 
+### 方式 A — API Token（推荐用于无头环境和 CLI 客户端）
+
+1. 登录你的 Helium 10 账户。
+2. 前往 **Settings → MCP → Create API Key**。
+3. 输入 Token 名称，选择有效期（最长两年），然后点击 **Create**。
+4. **立即复制该 Token。** 以 `h10_mcp_` 开头的完整 Token 只会显示一次。关闭对话框后，页面上只会显示经过掩码处理的前缀。
+5. 将 Token 添加到 MCP 客户端配置中，作为 `Authorization` 请求头的值。请直接使用原始 Token，**不要添加 `Bearer` 前缀**。配置示例请参阅 [客户端设置](https://github.com/helium10/Helium10-MCP#client-setup)。
+
+示例：
+
+```http
+Authorization: h10_mcp_<your-api-token>
+```
+
+如需轮换或撤销 Token，请返回同一设置页面并删除对应的 Token。每个用户最多可以同时拥有 50 个有效 Token。
+
+API Token 仅以加密哈希形式存储。Helium 10 无法再次显示或恢复丢失的 Token；如果 Token 丢失，请撤销原 Token 并创建一个新的 Token。
+
+### 方式 B — OAuth 2.1（浏览器登录）
+
+对于支持浏览器认证的交互式客户端，推荐使用 OAuth。
 适用于支持 **Authorization Code Flow + PKCE** 以及 **动态客户端注册(DCR)** 的客户端——Cursor、Claude Code、Claude Desktop、ChatGPT、Codex,以及大多数现代 MCP 客户端。
 
 1. 在客户端的 `mcp.json` 中添加 server URL,**不要带 `headers` 块**。
