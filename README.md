@@ -54,12 +54,33 @@ All toolsets are exposed under one server entry. You do **not** configure them i
 
 ## Authentication
 
-> **API Token is not supported yet.** Helium 10 MCP currently authenticates **only** via browser-based OAuth 2.1. Headless / CLI / shared-machine setups that cannot open a browser for the login flow aren't supported at this time — token-based auth is on the roadmap.
+Helium 10 MCP reuses Helium 10’s existing authentication and authorization system. Both authentication options below resolve to a real Helium 10 user, and data access is limited to that user’s account permissions, subscription entitlements, and connected marketplaces.
 
-Helium 10 MCP uses Helium 10's existing OAuth 2.1 system. The flow resolves to a real Helium 10 user, and data access is scoped to that user's account entitlements.
+You’ll need a Helium 10 account and one of the following:
 
-### OAuth 2.1 (browser login)
+- An **API Token** for clients that cannot complete browser-based OAuth; or
+- An MCP client that supports OAuth 2.1 with Authorization Code Flow and PKCE, as most modern MCP clients do.
 
+### Option A — API Token (recommended for headless and CLI clients)
+
+1. Sign in to your Helium 10 account.
+2. Go to **Settings → MCP → Create API Key**.
+3. Enter a name for the token, select an expiration period of up to two years, and click **Create**.
+4. **Copy the token immediately.** The complete token, beginning with `h10_mcp_`, is displayed only once. After you close the dialog, only a masked prefix remains visible.
+5. Add the token to your MCP client configuration as the value of the `Authorization` header. Use the raw token without a `Bearer` prefix. See [Client setup](https://github.com/helium10/Helium10-MCP#client-setup) for configuration examples.
+
+Example:
+
+```http
+Authorization: h10_mcp_<your-api-token>
+```
+
+To rotate or revoke a token, return to the same settings page and delete the corresponding token. Each user may have up to 50 active tokens.
+API Tokens are stored only as cryptographic hashes. Helium 10 cannot display or recover a lost token; you must revoke it and create a new one.
+
+### Option B — OAuth 2.1 (browser login)
+
+OAuth is recommended for interactive clients that support browser-based authentication.
 For clients that support OAuth 2.1 with **Authorization Code Flow + PKCE** and **Dynamic Client Registration (DCR)** — Cursor, Claude Code, Claude Desktop, ChatGPT, Codex, and most other modern MCP clients.
 
 1. In your client's `mcp.json`, add the server URL **without any `headers` block**.
