@@ -54,12 +54,33 @@ All toolsets are exposed under one server entry. You do **not** configure them i
 
 ## Authentication
 
-> **API Token is not supported yet.** Helium 10 MCP currently authenticates **only** via browser-based OAuth 2.1. Headless / CLI / shared-machine setups that cannot open a browser for the login flow aren't supported at this time — token-based auth is on the roadmap.
+Helium 10 MCP reuses Helium 10’s existing authentication and authorization system. Both authentication options below resolve to a real Helium 10 user, and data access is limited to that user’s account permissions, subscription entitlements, and connected marketplaces.
 
-Helium 10 MCP uses Helium 10's existing OAuth 2.1 system. The flow resolves to a real Helium 10 user, and data access is scoped to that user's account entitlements.
+You’ll need a Helium 10 account and one of the following:
 
-### OAuth 2.1 (browser login)
+- An **API Token** for clients that cannot complete browser-based OAuth; or
+- An MCP client that supports OAuth 2.1 with Authorization Code Flow and PKCE, as most modern MCP clients do.
 
+### Option A — API Token (recommended for headless and CLI clients)
+
+1. Sign in to your Helium 10 account.
+2. Go to **Settings → MCP → Create API Key**.
+3. Enter a name for the token, select an expiration period of up to two years, and click **Create**.
+4. **Copy the token immediately.** The complete token, beginning with `h10_mcp_`, is displayed only once. After you close the dialog, only a masked prefix remains visible.
+5. Add the token to your MCP client configuration as the value of the `Authorization` header. Use the raw token without a `Bearer` prefix. See [Client setup](https://github.com/helium10/Helium10-MCP#client-setup) for configuration examples.
+
+Example:
+
+```http
+Authorization: h10_mcp_<your-api-token>
+```
+
+To rotate or revoke a token, return to the same settings page and delete the corresponding token. Each user may have up to 50 active tokens.
+API Tokens are stored only as cryptographic hashes. Helium 10 cannot display or recover a lost token; you must revoke it and create a new one.
+
+### Option B — OAuth 2.1 (browser login)
+
+OAuth is recommended for interactive clients that support browser-based authentication.
 For clients that support OAuth 2.1 with **Authorization Code Flow + PKCE** and **Dynamic Client Registration (DCR)** — Cursor, Claude Code, Claude Desktop, ChatGPT, Codex, and most other modern MCP clients.
 
 1. In your client's `mcp.json`, add the server URL **without any `headers` block**.
@@ -78,7 +99,7 @@ Because API Token auth isn't available yet, **every client below uses the no-hea
 ### Cursor
 
 Add to `.cursor/mcp.json` (project) or `~/.cursor/mcp.json` (global):
-
+OAuth (recommended):
 ```json
 {
   "mcpServers": {
@@ -88,13 +109,31 @@ Add to `.cursor/mcp.json` (project) or `~/.cursor/mcp.json` (global):
   }
 }
 ```
-
+API Token:
+```json
+{
+  "mcpServers": {
+    "helium10-mcp": {
+      "url": "https://mcp.helium10.com/mcp",
+      "headers": {
+        "Authorization": "h10_mcp_<your-api-token>"
+      }
+    }
+  }
+}
+```
 ### Claude Code
 
 ```bash
 claude mcp add helium10-mcp --transport http https://mcp.helium10.com/mcp
 ```
-
+API Token:
+```bash
+claude mcp add helium10-mcp \
+  --transport http \
+  --header "Authorization: h10_mcp_<your-api-token>" \
+  https://mcp.helium10.com/mcp
+```
 Or in `.claude/settings.json`:
 
 ```json
@@ -102,7 +141,10 @@ Or in `.claude/settings.json`:
   "mcpServers": {
     "helium10-mcp": {
       "type": "http",
-      "url": "https://mcp.helium10.com/mcp"
+      "url": "https://mcp.helium10.com/mcp",
+      "headers" : {
+        "Authorization": "h10_mcp_<your-api-token>"
+      }
     }
   }
 }
@@ -121,7 +163,55 @@ Use a **Custom Connector** (OAuth, no config files, no Node.js):
 3. Click **Add**, then **Connect**. A browser tab opens for Helium 10 OAuth — sign in and click **Authorize**.
 4. Back in Claude, the connector flips to **Connected** and the tools become available immediately. No restart needed.
 
-> The `mcp-remote` stdio bridge is only needed for API Token auth, which Helium 10 MCP doesn't support yet — so the Custom Connector path is the only one you need.
+Alternative: mcp-remote bridge (required for API Token auth)
+
+If you need to authenticate with an API Token (headless usage, CI, shared machines, or any case where browser OAuth isn't an option), use the [mcp-remote](https://www.npmjs.com/package/mcp-remote) stdio bridge.
+
+Prerequisites: Node.js (LTS, includes npx) installed and on your PATH.
+
+Edit claude_desktop_config.json:
+
+macOS: ~/Library/Application Support/Claude/claude_desktop_config.json
+Windows: %APPDATA%\Claude\claude_desktop_config.json
+You can open it directly from Claude → Settings → Developer → Edit Config.
+
+API Token, macOS / Linux:
+```json
+{
+  "mcpServers": {
+    "helium10-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.helium10.com/mcp",
+        "--header",
+        "Authorization: h10_mcp_<your-api-token>"
+      ]
+    }
+  }
+}
+```
+API Token, Windows:
+```json
+{
+  "mcpServers": {
+    "helium10-mcp": {
+      "command": "npx.cmd",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.helium10.com/mcp",
+        "--header",
+        "Authorization: h10_mcp_<your-api-token>"
+      ]
+    }
+  }
+}
+```
+Note (Windows): Use npx.cmd rather than npx — Claude Desktop on Windows spawns the command directly without a shell, so the .cmd extension is required.
+
+After saving the config, fully quit and relaunch Claude Desktop (close the tray icon too — a window close is not enough). The helium10-mcp entry should appear under Settings → Developer as running, and the MCP tools should be available in chat.
 
 ### ChatGPT
 
@@ -171,6 +261,9 @@ A browser tab opens for Helium 10 OAuth — sign in and click **Authorize**. The
 ### Other MCP clients
 
 Helium 10 MCP is a standard streamable-HTTP MCP server, so any compliant client (VS Code GitHub Copilot, Windsurf, Cline, custom in-house agents, …) can connect with the same OAuth pattern: point the client at `https://mcp.helium10.com/mcp` with **no headers**, and complete the browser login when prompted.
+
+- OAuth — point the client at https://mcp.helium10.com/mcp with no headers.
+- API Token — point the client at the same URL and add an Authorization header containing h10_mcp_<your-api-token>.
 
 ---
 

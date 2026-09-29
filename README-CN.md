@@ -54,12 +54,34 @@ https://mcp.helium10.com/mcp
 
 ## 认证
 
-> **暂不支持 API Token。** Helium 10 MCP 目前**仅**支持基于浏览器的 OAuth 2.1 认证。无法打开浏览器完成登录流程的场景(headless / CLI / 共享机器)当前暂不支持——基于 Token 的认证已在规划中。
+Helium 10 MCP 复用 Helium 10 现有的身份认证和授权体系。下面两种认证方式最终都会关联到一个真实的 Helium 10 用户，数据访问范围受该用户的账户权限、订阅权益及已连接站点限制。
 
-Helium 10 MCP 复用 Helium 10 现有的 OAuth 2.1 体系。该流程会解析到一个真实的 Helium 10 用户,数据访问范围受限于该用户的账户权限。
+你需要拥有一个 Helium 10 账户，并满足以下任一条件：
 
-### OAuth 2.1(浏览器登录)
+- 拥有一个 **API Token**，适用于无法完成浏览器 OAuth 登录的客户端；或者
+- 使用支持 OAuth 2.1、Authorization Code Flow 和 PKCE 的 MCP 客户端——大多数现代 MCP 客户端均已支持。
 
+### 方式 A — API Token（推荐用于无头环境和 CLI 客户端）
+
+1. 登录你的 Helium 10 账户。
+2. 前往 **Settings → MCP → Create API Key**。
+3. 输入 Token 名称，选择有效期（最长两年），然后点击 **Create**。
+4. **立即复制该 Token。** 以 `h10_mcp_` 开头的完整 Token 只会显示一次。关闭对话框后，页面上只会显示经过掩码处理的前缀。
+5. 将 Token 添加到 MCP 客户端配置中，作为 `Authorization` 请求头的值。请直接使用原始 Token，**不要添加 `Bearer` 前缀**。配置示例请参阅 [客户端设置](https://github.com/helium10/Helium10-MCP#client-setup)。
+
+示例：
+
+```http
+Authorization: h10_mcp_<your-api-token>
+```
+
+如需轮换或撤销 Token，请返回同一设置页面并删除对应的 Token。每个用户最多可以同时拥有 50 个有效 Token。
+
+API Token 仅以加密哈希形式存储。Helium 10 无法再次显示或恢复丢失的 Token；如果 Token 丢失，请撤销原 Token 并创建一个新的 Token。
+
+### 方式 B — OAuth 2.1（浏览器登录）
+
+对于支持浏览器认证的交互式客户端，推荐使用 OAuth。
 适用于支持 **Authorization Code Flow + PKCE** 以及 **动态客户端注册(DCR)** 的客户端——Cursor、Claude Code、Claude Desktop、ChatGPT、Codex,以及大多数现代 MCP 客户端。
 
 1. 在客户端的 `mcp.json` 中添加 server URL,**不要带 `headers` 块**。
@@ -78,7 +100,7 @@ Helium 10 MCP 复用 Helium 10 现有的 OAuth 2.1 体系。该流程会解析�
 ### Cursor
 
 添加到 `.cursor/mcp.json`(项目级)或 `~/.cursor/mcp.json`(全局):
-
+OAuth (recommended):
 ```json
 {
   "mcpServers": {
@@ -88,13 +110,31 @@ Helium 10 MCP 复用 Helium 10 现有的 OAuth 2.1 体系。该流程会解析�
   }
 }
 ```
-
+API Token:
+```json
+{
+  "mcpServers": {
+    "helium10-mcp": {
+      "url": "https://mcp.helium10.com/mcp",
+      "headers": {
+        "Authorization": "h10_mcp_<your-api-token>"
+      }
+    }
+  }
+}
+```
 ### Claude Code
 
 ```bash
 claude mcp add helium10-mcp --transport http https://mcp.helium10.com/mcp
 ```
-
+API Token:
+```bash
+claude mcp add helium10-mcp \
+  --transport http \
+  --header "Authorization: h10_mcp_<your-api-token>" \
+  https://mcp.helium10.com/mcp
+```
 或在 `.claude/settings.json` 中:
 
 ```json
@@ -121,7 +161,72 @@ claude mcp add helium10-mcp --transport http https://mcp.helium10.com/mcp
 3. 点击 **Add**,再点 **Connect**。会弹出浏览器标签进行 Helium 10 OAuth——登录并点击 **Authorize**。
 4. 回到 Claude,连接器状态变为 **Connected**,工具立即可用,无需重启。
 
-> `mcp-remote` stdio 桥仅在使用 API Token 认证时才需要,而 Helium 10 MCP 暂不支持 API Token——因此你只需要用 Custom Connector 这一条路径。
+备选方案：`mcp-remote` 桥接器（API Token 认证必需）
+
+如果你需要使用 API Token 进行身份验证，例如无头环境、CI、共享计算机，或者任何无法使用浏览器 OAuth 的场景，请使用 [`mcp-remote`](https://www.npmjs.com/package/mcp-remote) stdio 桥接器。
+
+前置条件：
+
+确保已安装 Node.js LTS 版本（其中包含 `npx`），并且 `node` 和 `npx` 已添加到系统的 `PATH` 环境变量中。
+
+编辑 Claude Desktop 配置文件：
+
+配置文件位置：
+
+- macOS：`~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows：`%APPDATA%\Claude\claude_desktop_config.json`
+
+也可以直接在 Claude Desktop 中通过以下路径打开：
+
+**Claude → Settings → Developer → Edit Config**
+
+使用 API Token：macOS / Linux
+
+```json
+{
+  "mcpServers": {
+    "helium10-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.helium10.com/mcp",
+        "--header",
+        "Authorization: h10_mcp_<your-api-token>"
+      ]
+    }
+  }
+}
+```
+
+请将 `<your-api-token>` 替换为你的实际 API Token。
+
+使用 API Token：Windows
+
+```json
+{
+  "mcpServers": {
+    "helium10-mcp": {
+      "command": "npx.cmd",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.helium10.com/mcp",
+        "--header",
+        "Authorization: h10_mcp_<your-api-token>"
+      ]
+    }
+  }
+}
+```
+
+请将 `<your-api-token>` 替换为你的实际 API Token。
+
+> **Windows 注意事项：**请使用 `npx.cmd`，而不是 `npx`。Claude Desktop 在 Windows 上会直接启动该命令，而不会通过 Shell 执行，因此需要使用带有 `.cmd` 扩展名的命令。
+
+保存配置文件后，请完全退出并重新启动 Claude Desktop。请确保同时关闭系统托盘中的 Claude 图标——仅关闭应用窗口并不会完全退出 Claude Desktop。
+
+重新启动后`helium10-mcp` 应当在 **Settings → Developer** 中显示为正在运行。Helium 10 MCP 工具应当可以在聊天中使用。
 
 ### ChatGPT
 
@@ -175,6 +280,8 @@ codex mcp login helium10-mcp
 
 Helium 10 MCP 是标准的 streamable-HTTP MCP server,因此任何兼容的客户端(VS Code GitHub Copilot、Windsurf、Cline、自研 agent……)都能用相同的 OAuth 模式连接:把客户端指向 `https://mcp.helium10.com/mcp`,**不带 headers**,并在提示时完成浏览器登录。
 
+OAuth — 将客户端连接到 https://mcp.helium10.com/mcp，无需配置任何请求头。
+API Token — 将客户端连接到同一 URL，并添加 Authorization 请求头，其值为 h10_mcp_<your-api-token>
 ---
 
 ## 验证
