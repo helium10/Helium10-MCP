@@ -242,7 +242,7 @@ A browser tab opens for Helium 10 OAuth — sign in and click **Authorize**. The
 Helium 10 MCP is a standard streamable-HTTP MCP server, so any compliant client (VS Code GitHub Copilot, Windsurf, Cline, custom in-house agents, …) can connect with the same OAuth pattern: point the client at `https://mcp.helium10.com/mcp` with **no headers**, and complete the browser login when prompted.
 
 - OAuth — point the client at https://mcp.helium10.com/mcp with no headers.
-- API Token — point the client at the same URL and add an Authorization header containing h10_mcp_<your-api-token> (raw token, no Bearer prefix).
+- API Token — point the client at the same URL and add an Authorization header containing h10_mcp_<your-api-token>.
 
 ---
 
