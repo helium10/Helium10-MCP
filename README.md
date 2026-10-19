@@ -269,7 +269,38 @@ http_headers = { "Authorization" = "h10_mcp_<your-api-token>" }
 4. Click **Save**. With OAuth, complete the browser login when prompted (API Token needs no login), then make sure the server's toggle is on. The tools appear in the server list once connected.
 
 > The Codex desktop app and CLI share the same `~/.codex/config.toml`, so a server added in either place shows up in the other.
+### Muse(Meta)
 
+Muse
+Muse can create a custom connector through chat to connect to Helium 10 MCP, using a browser-based OAuth authorization flow.
+
+Setup:
+1. Open Muse, sign in, and start a conversation.
+2. Send the following prompt:
+```
+Please create a custom Helium 10 connector for me.
+
+MCP endpoint: https://mcp.helium10.com/mcp
+Transport: Streamable HTTP
+Authentication: OAuth authorization code flow with PKCE (S256)
+Dynamic client registration: Supported
+Scope: mcp:tools
+
+When using Python (urllib, requests, or httpx) or a custom script,
+explicitly set the User-Agent header when creating the HTTP client
+and include it in all subsequent MCP requests.
+Use a descriptive value such as Helium10-Muse-Connector/1.0.
+
+Please discover the service’s OAuth configuration, generate an
+authorization link, and guide me through the authorization process.
+
+Once authorization is complete, call initialize and tools/list
+to verify the connection, and show the actual number of tools returned.
+```
+
+
+3. Open the authorization link provided by Muse, sign in to Helium 10, click Authorize, and follow any remaining instructions.
+4. Wait for Muse to run initialize and tools/list. Once the tool list is successfully retrieved, you can use Helium 10 tools directly in the conversation.
 ### Other MCP clients
 
 Helium 10 MCP is a standard streamable-HTTP MCP server, so any compliant client (VS Code GitHub Copilot, Windsurf, Cline, custom in-house agents, …) can connect with either auth method:
