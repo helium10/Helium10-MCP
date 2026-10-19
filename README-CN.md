@@ -291,6 +291,35 @@ http_headers = { "Authorization" = "h10_mcp_<your-api-token>" }
 
 > Codex 桌面端应用与 CLI 共用同一份 `~/.codex/config.toml`,因此在任意一端添加的 server 都会在另一端出现。
 
+### Muse(Meta)
+
+Muse 可通过对话创建自定义连接器，接入 Helium 10 MCP，并通过浏览器完成 OAuth 登录授权。
+
+连接步骤：
+1. 打开 Muse，登录账号并创建对话。
+2. 将以下提示词发送给 Muse：
+```
+Please create a custom Helium 10 connector for me.
+
+MCP endpoint: https://mcp.helium10.com/mcp
+Transport: Streamable HTTP
+Authentication: OAuth authorization code flow with PKCE (S256)
+Dynamic client registration: Supported
+Scope: mcp:tools
+
+When using Python (urllib, requests, or httpx) or a custom script,
+explicitly set the User-Agent header when creating the HTTP client
+and include it in all subsequent MCP requests.
+Use a descriptive value such as Helium10-Muse-Connector/1.0.
+
+Please discover the service’s OAuth configuration, generate an
+authorization link, and guide me through the authorization process.
+
+Once authorization is complete, call initialize and tools/list
+to verify the connection, and show the actual number of tools returned.
+```
+3. 打开 Muse 提供的授权链接，登录 Helium 10 并点击 Authorize（授权），按提示完成后续操作。
+4. 等待 Muse 执行 initialize 和 tools/list。成功返回工具列表后，即可在对话中调用 Helium 10 工具。
 ### 其他 MCP 客户端
 
 Helium 10 MCP 是标准的 streamable-HTTP MCP server,因此任何兼容的客户端(VS Code GitHub Copilot、Windsurf、Cline、自研 agent……)都能用以下任一认证方式连接:
